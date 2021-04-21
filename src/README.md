@@ -7,4 +7,3 @@
 * `Util.py`: Utility methods, e.g. median heuristic for bandwidth, gradient estimator from (Li. et al.)[https://arxiv.org/pdf/1705.07107.pdf]
 * `active_slice`: Implements the active slice methods for finding slice directions in (Gong et al.)[https://arxiv.org/pdf/2102.03159.pdf].
 * `distribution.py`: Implements the probability distributions used in experiments. 
-* 
