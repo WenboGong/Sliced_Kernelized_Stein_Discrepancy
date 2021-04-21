@@ -42,5 +42,35 @@ Run **SKSD** to test **Laplace** against Gaussian with **active slice** using **
 
 `python Benchmark_GOF.py --method "SKSD" --distribution "Laplace" --optimal_init --method_score_q "kernel_smooth" --optimal_grad --grad_opt_ep 50 --method_r_opt "Fixed" --initialization "eye" --num_select 3`
 
+## ICA Model Training
+### Important Arguments
+* `--n_updates`: Number of ICA model update terations. Default: `15000`
+* `--dim`: The dimensionality of the ICA model.
+* `--method`: The ICA training method, including `"KSD"`, `"LSD"` and `"SKSD"`
+* `--optimal_init`: Set this to enable active slice method for both slice directions.
+* `--method_score_q`: Method for score estimation in active slice method, including `"kernel_smooth"`, `"gradient_estimator"` and `"exact"`
+* `--flag_opt_r`: Set this to enable the gradient optimization of direction r. **Note: this will decrease the performance significantly.** 
+* `--base_distribution`: The base distribution for ICA. Note: `"Laplace"` cannot be used with active slice method, the default is `"multi-t"`.
+* `--optimal_interval1`: Active slice method uses this interval to update slice directions during the early stage training (<6000 iterations). 
+* `--optimal_interval2`: Active slice method uses this interval to update slice directions during the late stage training (>6000 iterations).
 
+### Running the script
+Run **80** dimensional ICA training with **active slice method** using **kernel smooth**:
+
+`python ICA_Training.py --dim 80 --method "SKSD" --optimal_init --method_score_q "kernel_smooth" --base_distribution "multi-t"`
+
+
+
+## RBM goodness-of-fit test
+### Important Arguments
+For `--n_trials`, `--n_samples`, `--num_select`, `--grad_opt_ep`, `--method_score_q`, `--method_r_opt`, `--optimal_init`, `--optimal_grad`, and `--method`, refer to `Benchmark goodness-of-fit tests`.
+* `--burn_in_samples`: Pseudo samples drawn during burn-in periods. These samples are used for finding slice directions.
+* `--pseudo_setting`: Settings for pseudo samples. `"Setting1"`: Collecting pseudo samples first during burn-in, then train r,g using them (active slice method setting). `"Setting2"`: Train r,g during burn-in (Sliced kernelized Stein discrepancy paper setting).
+* `--burnin`: Burn-in period.
+* `--perturb`: Perturbation level list.
+
+### Running the script
+To use test RBM with perturbation **[0,0.01,0.012,0.014,0.016]**, **SKSD**,**active slice method for both directions**, **exact gradient**, **no further GO refinement**, **2000 pseudo samples**, and **pruning to 3 directions**:
+
+`python RBM_GOT.py --num_select 3 --method_score_q "exact" --method_r_opt "Not" --optimal_init --method "SKSD" --burn_in_samples 2000 --pseudo_setting "Setting1" --perturb [0,0.01,0.012,0.014,0.016]`
 
